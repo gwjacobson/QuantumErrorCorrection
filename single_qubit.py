@@ -1,31 +1,39 @@
 from qiskit import *
 from error import error
 from qiskit.providers.aer import extensions
+from qiskit.quantum_info import state_fidelity
 import random
 
-##Single qubit being exposed to random errors from noise model.
+##Single qubit being exposed to random errors from error model.
+## 10 time steps are ran, each with 10% prob of error. The fidelity of the
+## state is checked after each time step.
 
-sim = Aer.get_backend('qasm_simulator')
+
+sim = Aer.get_backend('qasm_simulator') #simulator
 
 #inital quantum state
 q = QuantumCircuit(1,1);
 
-q.h(0)
+q.h(0) #create initial superposition state
 
-s1 = qiskit.quantum_info.DensityMatrix(q)
+single_fidelity = []
 
+s1 = qiskit.quantum_info.DensityMatrix(q) #create initial density matrix to compare fidelity
 
-for i in range(1,10):
-    prob = random.randint(1, 15)
+#10 time steps with chance of error
+for i in range(1,50):
+    prob = random.randint(1, 10) #10% prob
 
-    if prob == 1:
+    if prob == 1: #an error is placed from error model
         error(q, 0)
         q.barrier(0)
-    else:
+    else: #nothing happens
         q.barrier(0)
 
-    s2 = qiskit.quantum_info.DensityMatrix(q)
+    s2 = qiskit.quantum_info.DensityMatrix(q) #density matrix after time step to compare fidelity
 
-    print(qiskit.quantum_info.state_fidelity(s1, s2))
+    fid = state_fidelity(s2, s1) #checking fidelity of each time step
+    single_fidelity.append(fid)
 
 print(q)
+print(single_fidelity)
