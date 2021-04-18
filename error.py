@@ -33,7 +33,7 @@ def error(circuit, qubit):
     #z = np.matrix([[1,0],[0,-1]])
     #i = np.matrix([[1,0],[0,1]])
 
-    #error_op = (e0*i)+(e1*x)+(e2*z)+(e3*x*z)
+    #error_op = (e1*x)+(e2*z)+(e3*x*z)+(e0*i)
     #eg = Operator(error_op)
 
     #circuit.unitary(eg, qubit, label='error')
