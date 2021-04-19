@@ -17,11 +17,12 @@ s1 = DensityMatrix(q)
 for i in range(1,10):
 
     #probability of error on q4
-    for bit in range(5,9):
+    for bit in range(4,9):
 
         p = random.randint(1,10)
         if p == 1:
-            error(q, bit)
+            #error(q, bit)
+            q.x(bit)
             q.barrier([0,1,2,3,4,5,6,7,8])
         else:
             q.barrier([0,1,2,3,4,5,6,7,8])

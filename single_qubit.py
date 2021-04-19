@@ -2,6 +2,7 @@ from qiskit import *
 from error import error
 from qiskit.providers.aer import extensions
 from qiskit.quantum_info import state_fidelity, DensityMatrix
+import matplotlib.pyplot as plt 
 import random
 
 ##Single qubit being exposed to random errors from error model.
@@ -14,18 +15,19 @@ sim = Aer.get_backend('qasm_simulator') #simulator
 #inital quantum state
 q = QuantumCircuit(1,1);
 
-q.h(0) #create initial superposition state
+
 
 single_fidelity = []
 
 s1 = DensityMatrix(q) #create initial density matrix to compare fidelity
 
 #10 time steps with chance of error
-for i in range(1,50):
+for i in range(1,10):
     prob = random.randint(1, 10) #10% prob
 
     if prob == 1: #an error is placed from error model
-        error(q, 0)
+        #error(q, 0)
+        q.x(0)
         q.barrier(0)
     else: #nothing happens
         q.barrier(0)
@@ -35,5 +37,7 @@ for i in range(1,50):
     fid = state_fidelity(s2, s1) #checking fidelity of each time step
     single_fidelity.append(fid)
 
-print(q)
+
 print(single_fidelity)
+q.draw(output='mpl')
+plt.show()
