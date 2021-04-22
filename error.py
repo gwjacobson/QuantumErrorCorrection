@@ -4,27 +4,44 @@ import random
 import numpy as np
 from numpy import pi
 
-## Simulation of a random error. When an error is place with some probability,
-## the function will simulation a measurement selection of a Pauli error,
-## I,X,Y,Z.
+## Functions to define different error models inspired by Chandak, Mardia, and Tolunay
 
-#error will choose a Pauli error each with 25% prob
-def error(circuit, qubit):
+#Include a Bit Flip, Phase Flip, Y Rotation, Hadamard, and Arbitrary Rotation
 
-    for i in range(1,4): #get a couple errors to multiple together
-        error = random.randint(1,5) #20% chance for each selection
+#function to add bit_flip error
+def bit_flip(circuit, qubit):
+    circuit.x(qubit)
+    return
 
-        if error == 1:
-            circuit.id(qubit) #no error
-        elif error == 2:
-            circuit.x(qubit) #bit flip error
-        elif error == 3:
-            circuit.z(qubit) #phase flip error
-        elif error == 4:
-            circuit.y(qubit) #combined phase and bit flip, Y gate
+#function to add phase_flip error
+def phase_flip(circuit, qubit):
+    circuit.z(qubit)
+    return
+
+#function to add phase and bit error
+def y_error(circuit, qubit):
+    circuit.y(qubit)
+
+#function to add superposition
+def h_error(circuit, qubit):
+    circuit.h(qubit)
+
+#function for arbitrary single qubit error
+#will apply 3 of the 5 gates for random error
+def arbitrary_error(circuit, qubit):
+    
+    for i in range(1,4): #apply 3 gates
+        e = random.randint(1,5)
+        if e == 1:
+            circuit.id(qubit) #identity
+        elif e == 2:
+            circuit.x(qubit) #bit flip
+        elif e == 3:
+            circuit.y(qubit) #bit and phase flip
+        elif e == 4:
+            circuit.z(qubit) #phase flip
         else:
-            phase = random.uniform(0.0, 2.0*pi) #random phase error
-            circuit.p(phase, qubit)
-
+            circuit.h(qubit) #superposition
 
     return
+

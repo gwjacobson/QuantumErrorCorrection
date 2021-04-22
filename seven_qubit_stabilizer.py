@@ -1,7 +1,7 @@
 from qiskit import *
-from qiskit.quantum_info import state_fidelity, DensityMatrix
+from qiskit.quantum_info import state_fidelity, DensityMatrix, Statevector
 import random
-from error import error
+from error import *
 import matplotlib.pyplot as plt
 
 ##

@@ -1,7 +1,7 @@
 from qiskit import *
-from qiskit.quantum_info import state_fidelity, DensityMatrix
+from qiskit.quantum_info import state_fidelity, DensityMatrix, Statevector
 import random
-from error import error
+from error import *
 import matplotlib.pyplot as plt
 
 ##
@@ -23,7 +23,7 @@ for i in range(1,10):
 
         prob = random.randint(1,10) #probability of an error on encoded qubits
         if prob == 1:
-            error(five_qc, bit) 
+            #error(five_qc, bit) 
             five_qc.barrier([0,1,2,3,4,5,6,7,8])
         else:
             five_qc.barrier([0,1,2,3,4,5,6,7,8])
