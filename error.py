@@ -31,7 +31,7 @@ def h_error(circuit, qubit):
 def arbitrary_error(circuit, qubit):
     
     for i in range(1,4): #apply 3 gates
-        e = random.randint(1,5)
+        e = random.randint(1,6)
         if e == 1:
             circuit.id(qubit) #identity
         elif e == 2:

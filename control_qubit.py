@@ -10,40 +10,45 @@ from qiskit.visualization import plot_histogram
 ## 10 time steps are ran, each with 10% prob of error. The fidelity of the
 ## state is checked after each time step.
 
-def control_qubits(qubits): 
-    sim = Aer.get_backend('statevector_simulator') #simulator
+#define qubits to test, the probability of finding an error, and number of shots
+def control_qubits(qubits, shots): 
+    
+    fid_array = []
 
-    #inital quantum state
-    qr = QuantumRegister(qubits, 'q')
-    cr = ClassicalRegister(qubits, 'c')
-    qc = QuantumCircuit(qr, cr)
+    for error in range(0,10):
+        
+        sim = Aer.get_backend('statevector_simulator') #simulator
 
-    #array of state fidelities from each run
-    fidelity = []
+        #inital quantum state
+        qr = QuantumRegister(qubits, 'q')
+        cr = ClassicalRegister(qubits, 'c')
+        qc = QuantumCircuit(qr, cr)
 
-    #create initial state to compare fidelity
-    state1 = Statevector(qc)
+        #array of state fidelities from each run
+        fidelity = 0.0
 
-    for i in range(1,10):
-        prob = random.randint(1,10) #10% probability of error
-        bit = random.randint(0, qubits) #qubit to apply error to
+        #create initial state to compare fidelity
+        state1 = Statevector(qc)
 
-        if prob == 1:
-            arbitrary_error(qc, bit)
-            qc.barrier(qr)
-        else:
-            qc.barrier(qr)
+        for i in range(0, shots):
 
-        #run the circuit
-        qobj = assemble(qc)
-        results = sim.run(qobj).result()
-        state2 = results.get_statevector() #state after time step to compare fidelity
-        fid = state_fidelity(state1,state2)
-        fidelity.append(fid)
+            prob = random.choices([0,1], weights=[(10-error)/10, error/10], k=1) #variable probability of error
+            bit = random.randint(0, qubits-1) #qubit to apply error to
 
+            if prob[0] == 1:
+                arbitrary_error(qc, bit)
+                qc.barrier(qr)
+            else:
+                qc.barrier(qr)
 
+            #run the circuit
+            qobj = assemble(qc)
+            results = sim.run(qobj).result()
+            state2 = results.get_statevector() #state after time step to compare fidelity
+            fid = state_fidelity(state1,state2)
+            fidelity += fid
+            avg_fid = fidelity/shots
+        
+        fid_array.append(avg_fid)
 
-    print(fidelity)
-    qc.draw(output='mpl')
-    plt.show()
-    return fidelity
+    return fid_array
