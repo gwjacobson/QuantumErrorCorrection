@@ -13,6 +13,7 @@ def test(shots):
     plt.plot(range(0,100,10), control1, label='Single Qubit')
     plt.plot(range(0,100,10), control3, label='Five Qubits')
     plt.plot(range(0,100,10), control5, label='Seven Qubits')
+    plt.plot(range(0,100,10), fivestab, label='Five Qubit Stabilizer')
     
     plt.title('Fidelity of Quantum States Exposed to Noise')
     plt.xlabel('Probability of Error %')
@@ -22,4 +23,4 @@ def test(shots):
 
     return
 
-test(50)
+test(20)

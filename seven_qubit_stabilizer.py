@@ -2,74 +2,75 @@ from qiskit import *
 from qiskit.quantum_info import state_fidelity, DensityMatrix, Statevector
 import random
 from error import *
-import matplotlib.pyplot as plt
 
 ##
 
-sim = Aer.get_backend('qasm_simulator') #simulator
+def seven_qubit_stabilizer(shots):
+    seven_array = []
 
-#inital quantum state
-q = QuantumCircuit(13,13);
+    for error in range(0,10):
+        #simulator
+        sim = Aer.get_backend('statevector_simulator')
 
-seven_fidelity = []
-s1 = DensityMatrix(q)
+        #inital quantum state
+        qr1 = QuantumRegister(6, 'ancilla')
+        qr2 = QuantumRegister(7, 'q')
+        cr = ClassicalRegister(6, 'c')
+        seven_qc = QuantumCircuit(qr1, qr2, cr)
 
-for i in range(1,10):
+        seven_fidelity = 0.0
 
-    #probability of error on q4
-    for bit in range(6,13):
+        for i in range(0, shots):
+            
+            state1 = Statevector(seven_qc)
 
-        p = random.randint(1,10)
-        if p == 1:
-            #error(q, bit)
-            q.x(bit)
-            q.barrier([0,1,2,3,4,5,6,7,8,9,10,11,12])
-        else:
-            q.barrier([0,1,2,3,4,5,6,7,8,9,10,11,12])
-
-    q.h(0)
-    q.h(1)
-    q.h(2)
-    q.h(3)
-    q.h(4)
-    q.h(5)
-    q.cx(5, 12)
-    q.cx(5, 11)
-    q.cx(5, 10)
-    q.cx(5, 9)
-    q.cx(4, 12)
-    q.cx(4, 11)
-    q.cx(4, 8)
-    q.cx(4, 7)
-    q.cx(3, 12)
-    q.cx(3, 10)
-    q.cx(3, 8)
-    q.cx(3, 6)
-    q.cz(2, 12)
-    q.cz(2, 11)
-    q.cz(2, 10)
-    q.cz(2, 9)
-    q.cz(1, 12)
-    q.cz(1, 11)
-    q.cz(1, 8)
-    q.cz(1, 7)
-    q.cz(0, 12)
-    q.cz(0, 10)
-    q.cz(0, 8)
-    q.cz(0, 6)
-    q.h(0)
-    q.h(1)
-    q.h(2)
-    q.h(3)
-    q.h(4)
-    q.h(5)
-    q.barrier([0,1,2,3,4,5,6,7,8,9,10,11,12])
-
-    s2 = DensityMatrix(q)
-    fid = state_fidelity(s1, s2)
-    seven_fidelity.append(fid)
+            #Error on encoded qubits
+            bit = random.randint(6,12) #bit to apply error to
+            prob = random.choices([0,1], weights=[(10-error)/10, error/10]) #probability of an error on encoded qubits
+            if prob[0] == 1:
+                bit_flip(seven_qc, bit)
+                seven_qc.barrier([0,1,2,3,4,5,6,7,8,9,10,11,12])
+            else:
+                seven_qc.barrier([0,1,2,3,4,5,6,7,8,9,10,11,12])
 
 
-print(seven_fidelity)
-q.draw(output='mpl')
-plt.show()
+            #this is the seven qubit stabilizer (6-12) with ancilla measurements (0-5)
+            seven_qc.h(0)
+            seven_qc.h(1)
+            seven_qc.h(2)
+            seven_qc.h(3)
+            seven_qc.cz(3, 7)
+            seven_qc.cx(3, 6)
+            seven_qc.cx(3, 5)
+            seven_qc.cz(3, 4)
+            seven_qc.cz(2, 8)
+            seven_qc.cz(2, 6)
+            seven_qc.cx(2, 5)
+            seven_qc.cx(2, 4)
+            seven_qc.cx(1, 8)
+            seven_qc.cz(1, 7)
+            seven_qc.cz(1, 5)
+            seven_qc.cx(1, 4)
+            seven_qc.cx(0, 8)
+            seven_qc.cx(0, 7)
+            seven_qc.cz(0, 6)
+            seven_qc.cz(0, 4)
+            seven_qc.h(0)
+            seven_qc.h(1)
+            seven_qc.h(2)
+            seven_qc.h(3)
+            
+            #do error correction
+
+
+            #run seven_qc
+            qobj = assemble(seven_qc)
+            results = sim.run(qobj).result()
+            state2 = Statevector(seven_qc) #state after time step to compare fidelity
+            fid = state_fidelity(state1,state2)
+            seven_fidelity += fid
+            avg_fid = seven_fidelity/shots
+        
+        seven_array.append(avg_fid)
+
+    return seven_array
