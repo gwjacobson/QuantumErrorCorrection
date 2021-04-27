@@ -26,6 +26,7 @@ def control_qubits(qubits, shots):
 
         #array of state fidelities from each run
         fidelity = 0.0
+        avg_fid = 0.0
 
         #create initial state to compare fidelity
         state1 = Statevector(qc)
@@ -36,7 +37,7 @@ def control_qubits(qubits, shots):
             bit = random.randint(0, qubits-1) #qubit to apply error to
 
             if prob[0] == 1:
-                bit_flip(qc, bit)
+                arbitrary_error(qc, bit)
                 qc.barrier(qr)
             else:
                 qc.barrier(qr)

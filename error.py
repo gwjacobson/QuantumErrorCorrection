@@ -22,26 +22,20 @@ def phase_flip(circuit, qubit):
 def y_error(circuit, qubit):
     circuit.y(qubit)
 
-#function to add superposition
-def h_error(circuit, qubit):
-    circuit.h(qubit)
-
 #function for arbitrary single qubit error
 #will apply 3 of the 5 gates for random error
 def arbitrary_error(circuit, qubit):
     
     for i in range(1,4): #apply 3 gates
-        e = random.randint(1,6)
+        e = random.randint(1,5)
         if e == 1:
             circuit.id(qubit) #identity
         elif e == 2:
             circuit.x(qubit) #bit flip
         elif e == 3:
             circuit.y(qubit) #bit and phase flip
-        elif e == 4:
-            circuit.z(qubit) #phase flip
         else:
-            circuit.h(qubit) #superposition
+            circuit.z(qubit) #phase flip
 
     return
 
