@@ -37,7 +37,7 @@ def control_qubits(qubits, shots):
             bit = random.randint(0, qubits-1) #qubit to apply error to
 
             if prob[0] == 1:
-                arbitrary_error(qc, bit)
+                bit_flip(qc, bit)
                 qc.barrier(qr)
             else:
                 qc.barrier(qr)

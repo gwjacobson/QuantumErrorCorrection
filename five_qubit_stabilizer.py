@@ -28,31 +28,31 @@ def five_qubit_stabilizer(shots):
             state1 = sim.run(qobj).result().get_statevector()
 
             #encoding of five qubits
-            five_qc.z(0)
-            five_qc.h(0)
-            five_qc.z(0)
-            five_qc.cx(0, 1)
-            five_qc.h(0)
-            five_qc.h(1)
-            five_qc.cx(0, 2)
-            five_qc.cx(1, 2)
-            five_qc.h(2)
-            five_qc.cx(0, 3)
-            five_qc.h(0)
-            five_qc.cx(2, 3)
+            five_qc.z(4)
+            five_qc.h(4)
+            five_qc.z(4)
+            five_qc.cx(4, 3)
             five_qc.h(3)
-            five_qc.cx(0, 4)
-            five_qc.cx(1, 4)
+            five_qc.h(4)
+            five_qc.cx(4, 2)
+            five_qc.cx(3, 2)
+            five_qc.h(2)
+            five_qc.cx(4, 1)
+            five_qc.cx(2, 1)
+            five_qc.h(4)
             five_qc.h(1)
-            five_qc.cx(2, 4)
-            five_qc.h(0)
+            five_qc.cx(4, 0)
+            five_qc.cx(3, 0)
+            five_qc.h(4)
+            five_qc.cx(2, 0)
+            five_qc.h(3)
             five_qc.barrier([0,1,2,3,4,5,6,7,8])
 
             #Error on encoded qubits
             bit = random.randint(0,4) #bit to apply error to
             prob = random.choices([0,1], weights=[(10-error)/10, error/10]) #probability of an error on encoded qubits
             if prob[0] == 1:
-                arbitrary_error(five_qc, bit)
+                bit_flip(five_qc, bit)
                 five_qc.barrier([0,1,2,3,4,5,6,7,8])
             else:
                 five_qc.barrier([0,1,2,3,4,5,6,7,8])
@@ -145,24 +145,24 @@ def five_qubit_stabilizer(shots):
 
             #decode the five_qc
             five_qc.barrier([0,1,2,3,4,5,6,7,8])
-            five_qc.h(0)
-            five_qc.cx(2, 4)
-            five_qc.h(1)
-            five_qc.cx(1, 4)
-            five_qc.cx(0, 4)
+            five_qc.h(4)
+            five_qc.cx(2, 0)
             five_qc.h(3)
-            five_qc.cx(2, 3)
-            five_qc.h(0)
-            five_qc.cx(0, 3)
-            five_qc.h(2)
-            five_qc.cx(1, 2)
-            five_qc.cx(0, 2)
+            five_qc.cx(3, 0)
+            five_qc.cx(4, 0)
             five_qc.h(1)
-            five_qc.h(0)
-            five_qc.cx(0, 1)
-            five_qc.z(0)
-            five_qc.h(0)
-            five_qc.z(0)
+            five_qc.cx(2, 1)
+            five_qc.h(4)
+            five_qc.cx(4, 1)
+            five_qc.h(2)
+            five_qc.cx(3, 2)
+            five_qc.cx(4, 2)
+            five_qc.h(4)
+            five_qc.h(3)
+            five_qc.cx(4, 3)
+            five_qc.z(4)
+            five_qc.h(4)
+            five_qc.z(4)
 
             #run five_qc
             qobj = assemble(five_qc)
@@ -172,9 +172,6 @@ def five_qubit_stabilizer(shots):
             avg_fid = five_fidelity/shots
         
         five_array.append(avg_fid)
-
-    #five_qc.draw(output='mpl')
-    #plt.show()
 
     return five_array
 

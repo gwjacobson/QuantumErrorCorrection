@@ -30,7 +30,7 @@ def seven_qubit_stabilizer(shots):
             bit = random.randint(0,6)#bit to apply error to
             prob = random.choices([0,1], weights=[(10-error)/10, error/10]) #probability of an error on encoded qubits
             if prob[0] == 1:
-                arbitrary_error(seven_qc, bit)
+                bit_flip(seven_qc, bit)
                 seven_qc.barrier([0,1,2,3,4,5,6,7,8,9])
             else:
                 seven_qc.barrier([0,1,2,3,4,5,6,7,8,9])
