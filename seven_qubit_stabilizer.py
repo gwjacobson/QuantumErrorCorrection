@@ -65,12 +65,13 @@ def seven_qubit_stabilizer(shots):
             parity_pf = results.get_statevector()
             
             #do error correction on phase flips
-            seven_qc.z(1).c_if(cr,1)
-            seven_qc.z(2).c_if(cr,2)
-            seven_qc.z(3).c_if(cr,3)
-            seven_qc.z(4).c_if(cr,4)
-            seven_qc.z(5).c_if(cr,5)
-            seven_qc.z(6).c_if(cr,6)
+            seven_qc.x(5).c_if(cr,1)
+            seven_qc.x(6).c_if(cr,2)
+            seven_qc.x(4).c_if(cr,3)
+            seven_qc.x(3).c_if(cr,4)
+            seven_qc.x(1).c_if(cr,5)
+            seven_qc.x(2).c_if(cr,6)
+            seven_qc.x(0).c_if(cr,7)
 
             #stabilizers for bit flip
             seven_qc.initialize([1,0], 7)
@@ -105,12 +106,13 @@ def seven_qubit_stabilizer(shots):
             parity_bf = results.get_statevector()
 
             #do error correction
-            seven_qc.x(1).c_if(cr,1)
-            seven_qc.x(2).c_if(cr,2)
-            seven_qc.x(3).c_if(cr,3)
-            seven_qc.x(4).c_if(cr,4)
-            seven_qc.x(5).c_if(cr,5)
-            seven_qc.x(6).c_if(cr,6)
+            seven_qc.z(5).c_if(cr,1)
+            seven_qc.z(6).c_if(cr,2)
+            seven_qc.z(4).c_if(cr,3)
+            seven_qc.z(3).c_if(cr,4)
+            seven_qc.z(1).c_if(cr,5)
+            seven_qc.z(2).c_if(cr,6)
+            seven_qc.z(0).c_if(cr,7)
 
             #run seven_qc
             qobj = assemble(seven_qc)
