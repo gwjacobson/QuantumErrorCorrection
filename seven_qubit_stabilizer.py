@@ -1,5 +1,5 @@
 from qiskit import *
-from qiskit.quantum_info import state_fidelity, DensityMatrix, Statevector
+from qiskit.quantum_info import state_fidelity
 import random
 from error import *
 
@@ -62,7 +62,6 @@ def seven_qubit_stabilizer(shots):
             #check ancilla measurements
             qobj = assemble(seven_qc)
             results = sim.run(qobj).result()
-            parity_pf = results.get_statevector()
             
             #do error correction on phase flips
             seven_qc.x(5).c_if(cr,1)
@@ -103,7 +102,6 @@ def seven_qubit_stabilizer(shots):
             #check ancilla measurements
             qobj = assemble(seven_qc)
             results = sim.run(qobj).result()
-            parity_bf = results.get_statevector()
 
             #do error correction
             seven_qc.z(5).c_if(cr,1)

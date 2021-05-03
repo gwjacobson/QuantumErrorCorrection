@@ -28,10 +28,10 @@ def control_qubits(qubits, shots):
         fidelity = 0.0
         avg_fid = 0.0
 
-        #create initial state to compare fidelity
-        state1 = Statevector(qc)
-
         for i in range(0, shots):
+            #create initial state to compare fidelity
+            state1 = Statevector(qc)
+                    
 
             prob = random.choices([0,1], weights=[(10-error)/10, error/10], k=1) #variable probability of error
             bit = random.randint(0, qubits-1) #qubit to apply error to
@@ -41,6 +41,9 @@ def control_qubits(qubits, shots):
                 qc.barrier(qr)
             else:
                 qc.barrier(qr)
+            
+            
+                
 
             #run the circuit
             qobj = assemble(qc)

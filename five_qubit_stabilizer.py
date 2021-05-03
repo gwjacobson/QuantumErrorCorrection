@@ -1,5 +1,5 @@
 from qiskit import *
-from qiskit.quantum_info import state_fidelity, DensityMatrix, Statevector
+from qiskit.quantum_info import state_fidelity
 import random
 from error import *
 from matplotlib import pyplot as plt
@@ -123,7 +123,6 @@ def five_qubit_stabilizer(shots):
             #check ancilla measurements
             qobj = assemble(five_qc)
             results = sim.run(qobj).result()
-            parity = results.get_statevector()
 
             #do error correction
             five_qc.x(1).c_if(cr, 1)
