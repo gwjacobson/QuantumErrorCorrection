@@ -29,26 +29,27 @@ def control_qubits(qubits, shots):
         avg_fid = 0.0
 
         #create initial state to compare fidelity
-        state1 = Statevector(qc)
+        qobj1 = assemble(qc)
+        state1 = sim.run(qobj1).result().get_statevector()
 
         for i in range(0, shots):
+            #qobj1 = assemble(qc)
+            #state1 = sim.run(qobj1).result().get_statevector()
                     
 
             prob = random.choices([0,1], weights=[(10-error)/10, error/10], k=1) #variable probability of error
             bit = random.randint(0, qubits-1) #qubit to apply error to
 
             if prob[0] == 1:
-                arbitrary_error(qc, bit)
+                phase_flip(qc, bit)
                 qc.barrier(qr)
             else:
                 qc.barrier(qr)
             
-            
-                
 
             #run the circuit
-            qobj = assemble(qc)
-            results = sim.run(qobj).result()
+            qobj2 = assemble(qc)
+            results = sim.run(qobj2).result()
             state2 = results.get_statevector() #state after time step to compare fidelity
             fid = state_fidelity(state1,state2)
             fidelity += fid

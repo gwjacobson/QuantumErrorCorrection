@@ -15,6 +15,7 @@ def bit_flip(circuit, qubit):
 
 #function to add phase_flip error
 def phase_flip(circuit, qubit):
+    circuit.h(qubit)
     circuit.z(qubit)
     return
 

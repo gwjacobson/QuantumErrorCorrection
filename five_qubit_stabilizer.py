@@ -22,10 +22,12 @@ def five_qubit_stabilizer(shots):
         five_fidelity = 0.0
         avg_fid = 0.0
 
+        #qobj1 = assemble(five_qc)
+        #state1 = sim.run(qobj1).result().get_statevector()
+
         for i in range(0, shots):
-            
-            qobj = assemble(five_qc)
-            state1 = sim.run(qobj).result().get_statevector()
+            qobj1 = assemble(five_qc)
+            state1 = sim.run(qobj1).result().get_statevector()
 
             #encoding of five qubits
             five_qc.z(4)
@@ -46,49 +48,18 @@ def five_qubit_stabilizer(shots):
             five_qc.h(4)
             five_qc.cx(2, 0)
             five_qc.h(3)
-            five_qc.barrier([0,1,2,3,4,5,6,7,8])
+            #five_qc.barrier([0,1,2,3,4,5,6,7,8])
+
 
             #Error on encoded qubits
             bit = random.randint(0,4) #bit to apply error to
             prob = random.choices([0,1], weights=[(10-error)/10, error/10]) #probability of an error on encoded qubits
             if prob[0] == 1:
-                arbitrary_error(five_qc, bit)
-                five_qc.barrier([0,1,2,3,4,5,6,7,8])
+                phase_flip(five_qc, bit)
+                five_qc.barrier([qr2,qr1])
             else:
-                five_qc.barrier([0,1,2,3,4,5,6,7,8])
+                five_qc.barrier([qr2,qr1])
 
-
-            #this is the five qubit stabilizer (4-8) with ancilla measurements (0-3) target on ancilla
-            """
-            five_qc.h(5)
-            five_qc.h(6)
-            five_qc.h(7)
-            five_qc.h(8)
-            five_qc.cz(1, 5)
-            five_qc.cx(2, 5)
-            five_qc.cx(3, 5)
-            five_qc.cz(4, 5)
-            five_qc.cz(0, 6)
-            five_qc.cz(2, 6)
-            five_qc.cx(3, 6)
-            five_qc.cx(4, 6)
-            five_qc.cx(0, 7)
-            five_qc.cz(1, 7)
-            five_qc.cz(3, 7)
-            five_qc.cx(4, 7)
-            five_qc.cx(0, 8)
-            five_qc.cx(1, 8)
-            five_qc.cz(2, 8)
-            five_qc.cz(4, 8)
-            five_qc.h(5)
-            five_qc.h(6)
-            five_qc.h(7)
-            five_qc.h(8)
-            five_qc.measure(5,0)
-            five_qc.measure(6,1)
-            five_qc.measure(7,2)
-            five_qc.measure(8,3)
-            """
 
             #this is the five qubit stabilizer (4-8) with ancilla measurements (0-3) target on codewords
             five_qc.h(5)
@@ -143,7 +114,7 @@ def five_qubit_stabilizer(shots):
             
 
             #decode the five_qc
-            five_qc.barrier([0,1,2,3,4,5,6,7,8])
+            #five_qc.barrier([0,1,2,3,4,5,6,7,8])
             five_qc.h(4)
             five_qc.cx(2, 0)
             five_qc.h(3)
@@ -164,8 +135,8 @@ def five_qubit_stabilizer(shots):
             five_qc.z(4)
 
             #run five_qc
-            qobj = assemble(five_qc)
-            state2 = sim.run(qobj).result().get_statevector() #state after time step to compare fidelity
+            qobj2 = assemble(five_qc)
+            state2 = sim.run(qobj2).result().get_statevector() #state after time step to compare fidelity
             fid = state_fidelity(state1,state2)
             five_fidelity += fid
             avg_fid = five_fidelity/shots
