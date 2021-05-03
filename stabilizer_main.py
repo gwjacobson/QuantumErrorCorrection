@@ -17,13 +17,13 @@ def test(shots):
     plt.plot(range(0,100,10), fivestab, label='Five Qubit Stabilizer')
     plt.plot(range(0,100,10), sevenstab, label='Seven Qubit Stabilizer')
     
-    plt.title('Fidelity of Quantum States Exposed to Phase Flip Errors')
+    plt.title('Fidelity of Quantum States Exposed to Arbitrary Errors')
     plt.xlabel('Probability of Error %')
     plt.ylabel('Fidelity')
     plt.legend()
-    #plt.savefig('phaseflip_plot.png')
+    plt.savefig('arbitrary_plot.png')
     plt.show()
 
     return
 
-test(50)
+test(100)
